@@ -129,6 +129,9 @@ public final class AlertController: UIViewController {
     @objc
     public let preferredStyle: AlertControllerStyle
 
+    @objc
+    public var callActionHandlerImmediatelly: Bool = false
+
     private let alert: UIView & AlertControllerViewRepresentable
     private lazy var transitionDelegate = SDCTransition(alertStyle: self.preferredStyle,
                                                      dimmingViewColor: self.visualStyle.dimmingColor)
@@ -327,8 +330,13 @@ public final class AlertController: UIViewController {
         self.alert.prepareLayout()
         self.alert.actionTappedHandler = { [weak self] action in
             if self?.shouldDismissHandler?(action) != false {
-                self?.dismiss(animated: true) {
+                if self?.callActionHandlerImmediatelly ?? false {
                     action.handler?(action)
+                }
+                self?.dismiss(animated: true) {
+                    if !(self?.callActionHandlerImmediatelly ?? false) {
+                        action.handler?(action)
+                    }
                 }
             }
         }
