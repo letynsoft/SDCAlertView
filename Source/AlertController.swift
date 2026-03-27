@@ -129,6 +129,7 @@ public final class AlertController: UIViewController {
     @objc
     public let preferredStyle: AlertControllerStyle
 
+    /// true to call the action before alert dissmiss, false to wait for dissmiss completion
     @objc
     public var callActionHandlerImmediatelly: Bool = false
 
